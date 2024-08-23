@@ -1,0 +1,19 @@
+{
+  "name": "premierleague",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ishraq-syed/PremierLeague.git"
+  },
+  "author": "Ishraq Syed",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ishraq-syed/PremierLeague/issues"
+  },
+  "homepage": "https://github.com/Ishraq-syed/PremierLeague#readme"
+}
