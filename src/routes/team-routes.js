@@ -6,7 +6,7 @@ const router = express.Router({
     mergeParams: true
 });
 
-router.use('/:teamId/player', playerRouter)
+router.use('/:teamId/player', playerRouter);
 router.route('/').post(teamController.addNewTeam).get(teamController.getAllTeams);
 router.route('/:teamId').delete(teamController.deleteTeam).get(teamController.getOneTeam).patch(teamController.updateTeam);
 

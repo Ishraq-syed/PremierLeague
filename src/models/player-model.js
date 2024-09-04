@@ -7,8 +7,7 @@ const playerSchema = new mongoose.Schema({
         required: [true, 'Cannot create a player without a first name field']
     },
     lastName: {
-        type: String,
-        required: [true, 'Cannot create a player without a last name field']
+        type: String
     },
     team: {
         type: mongoose.Schema.ObjectId,
