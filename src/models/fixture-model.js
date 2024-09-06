@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Team = require('./team-model');
 
 const goalDetailsSchema = new mongoose.Schema({
     minuteScored: {
@@ -151,7 +152,57 @@ const fixtureSchema = new mongoose.Schema({
         homePlayerRatings: [ratingsSchema],
         awayPlayerRatings: [ratingsSchema]
     }
+},
+{
+    toJSON: {
+        virtuals: true
+    },
+    toObject: {
+        virtuals: true
+    }
 });
+
+fixtureSchema.index([
+    {
+        homeTeam: 1,
+    }, {
+        awayTeam: 1
+    }
+]);
+
+fixtureSchema.index({
+    homeTeam: 1,
+    awayTeam: 1
+}, {
+    unique: true
+});
+
+// fixtureSchema.post('save', async function() {
+//         const updateHomeTeamStats = { 
+//                                 $inc: 
+//                                     {
+//                                         matchesWon: this.homeGoals > this.awayGoals ? 1 : 0,
+//                                         matchesLost: this.homeGoals < this.awayGoals ? 1 : 0,
+//                                         matchesDrawn: this.homeGoals === this.awayGoals ? 1 : 0,
+//                                         goalsFor: this.homeGoals,
+//                                         goalsAgainst: this.awayGoals,
+//                                     } 
+//                                 }
+//         await Team.findByIdAndUpdate(this.homeTeam, updateHomeTeamStats);
+
+//         const updateAwayTeamStats = { 
+//             $inc: 
+//                 {
+//                     matchesWon: this.homeGoals < this.awayGoals ? 1 : 0,
+//                     matchesLost: this.homeGoals > this.awayGoals ? 1 : 0,
+//                     matchesDrawn: this.homeGoals === this.awayGoals ? 1 : 0,
+//                     goalsFor: this.awayGoals,
+//                     goalsAgainst: this.homeGoals,
+//                 } 
+//             }
+//         await Team.findByIdAndUpdate(this.awayTeam, updateAwayTeamStats);
+
+// })
 
 fixtureSchema.pre(/^find/, function(next) {
     this.populate([{
@@ -234,6 +285,88 @@ fixtureSchema.pre(/^find/, function(next) {
 
     next();
 });
+
+// fixtureSchema.pre('aggregate', function(next) {
+//     this.populate([{
+//         path: 'homeTeam',
+//         select: 'name homeStadium'
+//     },
+//     {
+//         path: 'awayTeam',
+//         select: 'name'
+//     }, 
+//     {
+//         path: 'stats.homeGoalStats.scorer',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.homeGoalStats.assister',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awayGoalStats.scorer',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awayGoalStats.assister',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.homeSquad.playing11',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.homeSquad.subs',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awaySquad.playing11',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awaySquad.subs',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.homeChanges.playerIn',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.homeChanges.playerOut',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awayChanges.playerIn',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awayChanges.playerOut',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.homeYellowCards.receiver',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awayYellowCards.receiver',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.homeRedCards.receiver',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.awayRedCards.receiver',
+//         select: 'firstName lastName'  
+//     },
+//     {
+//         path: 'stats.motm',
+//         select: 'firstName lastName'
+//     }
+// ]);
+
+//     next();
+// });
 
 const Fixture = mongoose.model('Fixture', fixtureSchema);
 

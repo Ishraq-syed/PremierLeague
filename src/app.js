@@ -12,7 +12,7 @@ app.use(express.json());
 app.use('/api/v1/season', seasonRouter);
 app.use('/api/v1/team', teamRouter);
 app.use('/api/v1/player', playerRouter);
-// app.use('/api/v1/fixture', fixtureRouter);
+app.use('/api/v1/fixture', fixtureRouter);
 app.all('*', (request, response, next) => {
     next(new AppError('Resource not Found!!!', 404));
 });

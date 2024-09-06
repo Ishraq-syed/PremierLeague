@@ -17,21 +17,6 @@ const teamSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Home Stadium is required to create a team']
     },
-    matchesWon: {
-        type: Number,
-        default: 0,
-        required: [true, 'Matches won is required to create a team']
-    },
-    matchesLost: {
-        type: Number,
-        default: 0,
-        required: [true, 'Matches lost is required to create a team']
-    },
-    matchesDrawn: {
-        type: Number,
-        default: 0,
-        required: [true, 'Matches drawn is required to create a team']
-    },
     kits: {
         homeKit: {
             type: String,
@@ -42,16 +27,6 @@ const teamSchema = new mongoose.Schema({
         thirdKit: {
             type: String,
         }
-    },
-    goalsFor: {
-        type: Number,
-        default: 0,
-        required: [true, 'Goals for is required to create a team']
-    },
-    goalsAgainst: {
-        type: Number,
-        default: 0,
-        required: [true, 'Goals against is required to create a team']
     },
     manager: {
         type: String,
@@ -74,6 +49,17 @@ teamSchema.index({
     unique: true
 });
 
+teamSchema.virtual('homeFixtures', {
+    ref: 'Fixture',
+    foreignField: 'homeTeam',
+    localField: '_id'
+});
+
+teamSchema.virtual('awayFixtures', {
+    ref: 'Fixture',
+    foreignField: 'awayTeam',
+    localField: '_id'
+});
 //Virtual properties not to be saved in DB. Just to send to client
 // teamSchema.virtual('points').get(function() {
 //     return (this.matchesWon * 3) + (this.matchesDrawn * 1)

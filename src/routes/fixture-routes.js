@@ -7,8 +7,7 @@ const router = express.Router({
 });
 
 router.route('/').post(fixtureController.addNewFixture);
-
 router.route('/:teamId').get(fixtureController.getFixtureForTeam);
-// router.route('/:fixtureId').get(playerController.getOneFixture);
+router.route('/:fixtureId').patch(fixtureController.updateFixture);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Team = require('../models/team-model');
+const teamService = require('../services/team-service');
 const AppError = require('../util/error');
 const catchAsyncError = require('../util/async-error-handler');
 
@@ -11,45 +12,8 @@ exports.addNewTeam =  catchAsyncError(async (req, res, next) => {
 });
 
 exports.getAllTeams =  catchAsyncError(async (req, res, next) => {
-    // const teams = await Team.find().select('-__v');
-    const teams = await Team.aggregate([
-        {
-            $match: {}
-        },
-        {
-            $addFields: {
-                matchesPlayed: {
-                    $add: ['$matchesWon', '$matchesLost', '$matchesDrawn']
-                },
-                points: {
-                    $add: [
-                        {
-                            $multiply: ['$matchesWon', 3]
-                        },
-                        {
-                            $multiply: ['$matchesDrawn', 1]
-                        }
-                    ]
-                },
-                goalDifference: {
-                    $subtract: ['$goalsFor', '$goalsAgainst']
-                }
-            }
-        }, 
-        {
-            $sort: {
-                points: -1,
-                goalDifference: -1,
-                goalsFor: -1,
-                name: 1
-            }
-        },
-        {
-            $project: {
-                __v: 0
-            }
-        }
-    ])
+    const teamsRes = await Team.find().select('-__v').populate('homeFixtures').populate('awayFixtures');
+    const teams = teamService.calculateTeamStats(teamsRes);
     res.status(200).json({
         status: 'success',
         total: teams.length,
