@@ -7,6 +7,7 @@ const router = express.Router({
 });
 
 router.use('/:teamId/player', playerRouter);
+router.get('/:teamId/teamPlayerStats', teamController.getTeamPlayerStats);
 router.route('/').post(teamController.addNewTeam).get(teamController.getAllTeams);
 router.route('/:teamId').delete(teamController.deleteTeam).get(teamController.getOneTeam).patch(teamController.updateTeam);
 

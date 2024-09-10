@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const dotEnv = require('dotenv');
 dotEnv.config({path: './config.env'});
 const app = require('./src/app');
-
 const encodedPassword = encodeURIComponent(process.env.PASSWORD);
 const DB = process.env.DATABASE.replace('<PASSWORD>', encodedPassword);
 

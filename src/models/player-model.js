@@ -38,6 +38,10 @@ const playerSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    fixtures: [{
+                type: mongoose.Schema.ObjectId,
+                ref: 'Fixture'
+    }],
     cleanSheets: {
         type: Number,
         validate: {
@@ -48,6 +52,7 @@ const playerSchema = new mongoose.Schema({
             message: 'Clean sheets are only associated with Goal Keepers'
         }
     },
+   
     yellowCards: {
         type: Number,
         default: 0

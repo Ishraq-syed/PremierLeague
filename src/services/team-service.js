@@ -56,3 +56,18 @@ exports.calculateTeamStats = (teamsRes) => {
        }
     });
 }
+
+exports.processPlayerGoalsBasedOnHomeOrAwayFixtures = (fixturesForAteam, teamId) => {
+    const filteredDataHome = fixturesForAteam[0].homeGoalStats.filter( stat => stat.playerInfo.team?.toString() === teamId);
+    const filteredDataAway = fixturesForAteam[0].awayGoalStats.filter( stat => stat.playerInfo.team?.toString() === teamId);
+    const combinedHomeAwayResults = [...filteredDataHome, ...filteredDataAway];
+    const tempMap = new Map();
+    combinedHomeAwayResults?.forEach((item) => {
+        if (!tempMap.get(item?.playerInfo?._id?.toString())) {
+            tempMap.set(item?.playerInfo?._id?.toString(), item);
+        } else {
+            tempMap.get(item?.playerInfo?._id?.toString()).goals += item.goals;
+        }
+    });
+    return [...tempMap.values()];
+}

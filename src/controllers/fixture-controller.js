@@ -32,3 +32,4 @@ exports.getFixtureForTeam = catchAsyncError(async (req, res, next) => {
         fixtures
     });
 });
+
