@@ -26,18 +26,6 @@ const playerSchema = new mongoose.Schema({
             message: `This is not a valid position. Please choose from ${APP_CONSTANTS.PLAYER_POSITIONS.toString()}`
         }
     },
-    goals: {
-        type: Number,
-        default: 0
-    },
-    assists: {
-        type: Number,
-        default: 0
-    },
-    motm: {
-        type: Number,
-        default: 0
-    },
     fixtures: [{
                 type: mongoose.Schema.ObjectId,
                 ref: 'Fixture'
@@ -52,19 +40,6 @@ const playerSchema = new mongoose.Schema({
             message: 'Clean sheets are only associated with Goal Keepers'
         }
     },
-   
-    yellowCards: {
-        type: Number,
-        default: 0
-    },
-    redCards: {
-        type: Number,
-        default: 0
-    },
-    matchesPlayer: {
-        type: Number,
-        default: 0
-    }
 });
 
 playerSchema.index({
