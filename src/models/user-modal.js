@@ -39,12 +39,16 @@ const userScehma = new mongoose.Schema({
             message: 'Passwords are not matching!!'
         }
     },
+    passwordChangedAt: Date
 });
 
 
 userScehma.pre('save', async function(next) {
     this.password = await bcrypt.hash(this.password, 12);
     this.passwordConfirm = undefined;
+    if (this.isModified('password') && !this.isNew) {
+        this.passwordChangedAt = Date.now() - 1000
+    }
     next();
 });
 

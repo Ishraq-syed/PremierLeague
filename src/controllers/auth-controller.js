@@ -29,6 +29,9 @@ exports.login = catchAsyncError(async (req, res, next) => {
   }
 
   const user = await User.findOne({email: req.body.email}).select('+password');
+  if (!user) {
+    return next(new AppError('User doesn\'t exist', 404));
+  }
   const isPasswordValid = await authService.comparePasswords(req.body.password, user.password);
 
   // Two checks here. First check if user exists and then check password is valid
@@ -43,6 +46,26 @@ exports.login = catchAsyncError(async (req, res, next) => {
    status: 'Success!',
    token
   });
+});
+
+exports.updatePassword =  catchAsyncError(async (req, res, next) => {
+  const {currPassword, newPassword, passwordConfirm} = req.body;
+  const user = await User.findById(req.user.id).select('+password');
+  const isCurrPasswordValid = await authService.comparePasswords(currPassword, user.password);
+  if (!isCurrPasswordValid) {
+    return next(new AppError('Current Password is not correct!', 400));
+  }
+  user.password = newPassword;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+  const token = jwt.sign({id: req.user.id}, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE_TIME
+   });
+  res.cookie('jwt', token, cookieOptions);
+  res.status(200).json({
+    status: 'Success!',
+    token
+   });
 });
 
 exports.protect = catchAsyncError(async (req, res, next) => {
@@ -63,8 +86,14 @@ exports.protect = catchAsyncError(async (req, res, next) => {
     // Check if the user who issued JWT exists
     const user = await User.findById(decodedInfo.id);
 
+    const tokenIssuedAtTime = decodedInfo.iat;
+
     if (!user) {
-      return next(new AppError('The User who issued the token does not exist anymore!'))
+      return next(new AppError('The User who issued the token does not exist anymore'));
+    }
+
+    if (authService.isPasswordChangedAfterTokenIssuing(tokenIssuedAtTime, user)) {
+      return next(new AppError('Password has been changed since you last issued the token'));
     }
 
     req.user = user;
