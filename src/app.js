@@ -7,6 +7,7 @@ const teamRouter = require('./routes/team-routes');
 const playerRouter = require('./routes/player-routes');
 const fixtureRouter = require('./routes/fixture-routes');
 const userRouter = require('./routes/user-routes');
+const commentRouter = require('./routes/comment-routes');
 const AppError = require('./util/error');
 
 app.use(cookieParser());
@@ -17,6 +18,7 @@ app.use('/api/v1/team', teamRouter);
 app.use('/api/v1/player', playerRouter);
 app.use('/api/v1/fixture', fixtureRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/comment', commentRouter);
 app.all('*', (request, response, next) => {
     next(new AppError('Resource not Found!!!', 404));
 });
